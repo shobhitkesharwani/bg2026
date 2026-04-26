@@ -1,0 +1,1277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Boss Gym Mirzapur — Billing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --bg:#f6f5f1;          /* arctic off-white */
+    --bg-2:#ecebe6;
+    --panel:#ffffff;
+    --ink:#0c0c0d;          /* near-black ink */
+    --ink-soft:#3a3a3d;
+    --muted:#8a8a90;
+    --line:#e4e2dc;
+    --line-strong:#d4d2cb;
+    --accent:#ff5a1f;       /* power orange */
+    --accent-2:#ff8a3d;
+    --accent-ink:#1a0a02;
+    --ok:#16a34a;
+    --warn:#b91c1c;
+    --radius:18px;
+    --shadow:0 30px 80px -30px rgba(12,12,13,.25), 0 6px 18px rgba(12,12,13,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;position:relative}
+  /* GLOBAL COPYRIGHT BACKDROP — diagonal repeating watermark across the entire page */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;
+    z-index:0;
+    background-image:
+      repeating-linear-gradient(
+        -28deg,
+        transparent 0,
+        transparent 180px,
+        rgba(12,12,13,.035) 180px,
+        rgba(12,12,13,.035) 181px,
+        transparent 181px,
+        transparent 360px
+      ),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='760' height='280' viewBox='0 0 760 280'><g transform='rotate(-22 380 140)' font-family='Archivo Black, Impact, sans-serif' font-weight='900' fill='%230c0c0d' fill-opacity='0.045'><text x='50%25' y='42%25' text-anchor='middle' font-size='62' letter-spacing='6'>BOSS GYM • MIRZAPUR</text><text x='50%25' y='66%25' text-anchor='middle' font-size='17' letter-spacing='10' fill='%23ff5a1f' fill-opacity='0.07'>© ALL RIGHTS RESERVED • UNAUTHORIZED DUPLICATION PROHIBITED</text></g></svg>");
+    background-size:auto, 760px 280px;
+    background-repeat:repeat;
+  }
+  .wrap{max-width:1240px;margin:0 auto;padding:24px 22px 80px;position:relative;z-index:1}
+
+
+  /* HERO HEADER */
+  .hero{position:relative;background:var(--ink);color:#fff;border-radius:24px;padding:28px 32px;overflow:hidden;margin-bottom:22px;box-shadow:var(--shadow)}
+  .hero::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(700px 360px at 110% -20%, rgba(255,90,31,.55), transparent 60%),
+    radial-gradient(500px 300px at -10% 120%, rgba(255,138,61,.25), transparent 60%);
+    pointer-events:none}
+  .hero-row{position:relative;display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;z-index:2}
+  @media (max-width: 900px){ .hero-row{grid-template-columns:1fr;text-align:left} .hero-figure{display:none} }
+  .hero h1{font-family:"Archivo Black",sans-serif;font-size:clamp(34px,5vw,58px);line-height:.9;margin:8px 0 6px;letter-spacing:-.02em;text-transform:uppercase}
+  .hero h1 em{font-style:normal;color:var(--accent-2);}
+  .hero .kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:6px 12px;border-radius:999px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#ffd9c2;font-weight:700}
+  .hero p.sub{margin:8px 0 0;color:#cfcfd3;font-size:13px;max-width:46ch;line-height:1.5}
+  .hero-figure{justify-self:center;width:240px;height:240px;display:grid;place-items:center;filter:drop-shadow(0 20px 40px rgba(255,90,31,.35))}
+  .hero-actions{justify-self:end;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+  /* HERO BRAND LOCKUP — premium logo + name */
+  .brand-lockup{display:inline-flex;align-items:center;gap:18px;background:linear-gradient(135deg, rgba(255,90,31,.18), rgba(255,255,255,.04));padding:14px 22px 14px 14px;border-radius:18px;border:1px solid rgba(255,138,61,.35);box-shadow:0 12px 40px -16px rgba(255,90,31,.55), inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(4px);position:relative;overflow:hidden}
+  .brand-lockup::after{content:"";position:absolute;inset:0;background:radial-gradient(220px 80px at 0% 0%, rgba(255,138,61,.35), transparent 70%);pointer-events:none}
+  .brand-badge{width:74px;height:74px;border-radius:16px;background:#fff;padding:6px;display:grid;place-items:center;box-shadow:0 10px 30px -8px rgba(255,90,31,.6), 0 0 0 3px rgba(255,138,61,.4);position:relative;z-index:1;flex-shrink:0}
+  .brand-badge img{width:100%;height:100%;object-fit:contain;border-radius:10px}
+  .brand-badge .placeholder{width:100%;height:100%;border-radius:10px;background:linear-gradient(135deg,var(--accent),#c0370f);color:#fff;display:grid;place-items:center;font-family:"Archivo Black";font-size:26px;letter-spacing:1.5px}
+  .brand-text{position:relative;z-index:1;line-height:1}
+  .brand-name{font-family:"Archivo Black",sans-serif;font-size:24px;letter-spacing:2px;color:#fff;text-transform:uppercase;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+  .brand-sub{font-family:"Manrope";font-size:10px;letter-spacing:4px;color:var(--accent-2);text-transform:uppercase;font-weight:800;margin-top:6px}
+
+  .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  .btn{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;padding:11px 16px;border-radius:12px;font-weight:700;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .15s ease,background .15s ease,border-color .15s ease;letter-spacing:.5px;text-transform:uppercase;font-family:"Manrope"}
+  .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.12)}
+  .btn.primary{background:var(--accent);border-color:transparent;color:#fff;box-shadow:0 8px 24px -8px rgba(255,90,31,.7)}
+  .btn.primary:hover{background:var(--accent-2)}
+  .btn.light{background:#fff;color:var(--ink);border-color:transparent}
+  .btn.light:hover{background:#f0efe9}
+  .pass-field{display:inline-flex;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:4px 4px 4px 12px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#cfcfd3;font-weight:700;gap:6px}
+  .pass-field input{background:transparent;border:0;color:#fff;outline:none;font-family:"Manrope";font-size:13px;width:120px;padding:8px 6px}
+  .pass-field input::placeholder{color:#7a7a80}
+
+  .grid{display:grid;grid-template-columns:1fr 1.05fr;gap:22px}
+  @media (max-width: 1020px){ .grid{grid-template-columns:1fr} }
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+  .card + .card{margin-top:18px}
+  .card h2{margin:0 0 16px;font-family:"Archivo Black";font-size:14px;letter-spacing:3px;color:var(--ink);text-transform:uppercase;display:flex;align-items:center;gap:10px}
+  .card h2::before{content:"";width:18px;height:3px;background:var(--accent);border-radius:2px}
+
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .field label{font-size:10.5px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .field label .hint{font-size:9.5px;color:var(--accent);letter-spacing:1px;text-transform:none;font-weight:700;background:rgba(255,90,31,.08);padding:2px 8px;border-radius:999px;border:1px solid rgba(255,90,31,.2)}
+  .field input::placeholder,.field textarea::placeholder,.item-row input::placeholder{color:#b5b5bd;font-style:italic;font-weight:500;opacity:1}
+  .field input,.field select,.field textarea{background:#fbfaf6;border:1.5px solid var(--line);color:var(--ink);padding:12px 14px;border-radius:12px;font-size:14px;font-family:"Manrope";transition:border .15s,box-shadow .15s,background .15s;font-weight:500}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(255,90,31,.12)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px}
+
+  .item-row{display:grid;grid-template-columns:2fr 90px 110px 36px;gap:8px;align-items:end;margin-bottom:8px}
+  .item-row input{background:#fbfaf6;border:1.5px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:10px;font-size:13px;font-family:"Manrope";font-weight:500}
+  .item-row input:focus{outline:none;border-color:var(--accent);background:#fff}
+  .icon-btn{background:transparent;border:1.5px solid var(--line);color:var(--muted);width:36px;height:40px;border-radius:10px;cursor:pointer;font-size:18px;line-height:1;transition:all .15s}
+  .icon-btn:hover{color:#fff;border-color:var(--accent);background:var(--accent)}
+  .add-item{margin-top:8px;color:var(--accent);background:#fff;border:1.5px dashed rgba(255,90,31,.5);padding:11px;width:100%;border-radius:12px;cursor:pointer;font-weight:800;font-size:12.5px;letter-spacing:2px;text-transform:uppercase;font-family:"Manrope"}
+  .add-item:hover{background:rgba(255,90,31,.06)}
+  .totals-mini{margin-top:16px;padding:16px;background:#fbfaf6;border:1.5px solid var(--line);border-radius:14px;font-size:13px}
+  .totals-mini .line{display:flex;justify-content:space-between;padding:5px 0;color:var(--ink-soft);font-weight:600}
+  .totals-mini .line.grand{color:var(--ink);font-family:"Archivo Black";font-size:18px;padding-top:10px;margin-top:6px;border-top:2px solid var(--ink)}
+  .totals-mini .line.grand span:last-child{color:var(--accent)}
+
+  /* INVOICE PREVIEW */
+  .invoice{position:relative;background:#fff;color:var(--ink);border-radius:18px;overflow:hidden;font-family:"Manrope",sans-serif;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .invoice .watermark{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='540' height='220' viewBox='0 0 540 220'><g transform='rotate(-22 270 110)' font-family='Archivo Black, Impact, sans-serif' font-weight='900' fill='%230c0c0d' fill-opacity='0.06'><text x='50%25' y='42%25' text-anchor='middle' font-size='44' letter-spacing='5'>BOSS GYM • MIRZAPUR</text><text x='50%25' y='66%25' text-anchor='middle' font-size='13' letter-spacing='8' fill='%23ff5a1f' fill-opacity='0.10'>© ALL RIGHTS RESERVED</text></g></svg>");background-repeat:repeat;background-size:540px 220px}
+  .invoice .watermark .figure{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.05}
+  .invoice .watermark .figure svg{width:65%;height:auto}
+  .invoice .copyright-strip{position:absolute;bottom:0;left:0;right:0;background:var(--ink);color:#ffd9c2;text-align:center;font-size:9.5px;letter-spacing:3px;padding:8px;text-transform:uppercase;z-index:2;font-weight:700;font-family:"Manrope"}
+  .invoice .inv-head, .invoice .inv-body{position:relative;z-index:1}
+  .invoice .inv-body{padding-bottom:46px !important}
+
+  .inv-head{background:var(--ink);color:#fff;padding:30px 32px;position:relative;overflow:hidden}
+  .inv-head::after{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;background:radial-gradient(circle,var(--accent) 0%,transparent 70%);opacity:.5}
+  .inv-head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;position:relative;z-index:1}
+  .inv-brand{display:flex;align-items:center;gap:16px}
+  .inv-brand .badge{width:64px;height:64px;border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden}
+  .inv-brand .badge img{width:100%;height:100%;object-fit:contain;padding:6px}
+  .inv-brand .badge .mono{font-family:"Archivo Black";font-size:24px;color:var(--accent);letter-spacing:0}
+  .inv-brand h2{margin:0;font-family:"Archivo Black";letter-spacing:-.01em;font-size:30px;color:#fff;text-transform:uppercase;line-height:.95}
+  .inv-brand .tag{color:var(--accent-2);font-size:10px;letter-spacing:4px;text-transform:uppercase;font-weight:800;margin-bottom:4px}
+  .inv-brand .addr{font-size:11px;color:#cfcfd3;margin-top:6px;letter-spacing:.3px}
+  .inv-meta{text-align:right;font-size:12px;color:#cfcfd3}
+  .inv-meta .lbl{font-size:10px;letter-spacing:3px;color:#9a9aa0;text-transform:uppercase;font-weight:800}
+  .inv-meta .num{font-family:"Archivo Black";font-size:22px;color:#fff;letter-spacing:1px;margin-top:2px}
+  .stamp{display:inline-block;border:2.5px solid var(--ok);color:var(--ok);padding:5px 14px;border-radius:8px;font-family:"Archivo Black";letter-spacing:3px;font-size:13px;transform:rotate(-6deg);background:rgba(22,163,74,.08);margin-top:10px}
+  .stamp.due{border-color:#ff8a3d;color:#ff8a3d;background:rgba(255,138,61,.1)}
+  .stamp.partial{border-color:#fbbf24;color:#fbbf24;background:rgba(251,191,36,.1)}
+
+  .inv-body{padding:28px 32px}
+  .billto{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding-bottom:22px;border-bottom:1.5px dashed var(--line-strong)}
+  .billto h4{margin:0 0 8px;font-family:"Archivo Black";font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+  .billto p{margin:3px 0;font-size:13px;color:var(--ink-soft);line-height:1.55}
+  .billto strong{color:var(--ink);font-size:15px;font-weight:800}
+  .inv-table{width:100%;border-collapse:collapse;margin-top:20px;font-size:13px}
+  .inv-table th{text-align:left;background:var(--ink);color:#fff;padding:13px 14px;font-family:"Archivo Black";font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase}
+  .inv-table th:first-child{border-radius:10px 0 0 10px}
+  .inv-table th:last-child{border-radius:0 10px 10px 0;text-align:right}
+  .inv-table td:last-child{text-align:right;font-weight:700}
+  .inv-table td{padding:13px 14px;border-bottom:1px solid var(--line);color:var(--ink)}
+  .inv-table tr:last-child td{border-bottom:0}
+  .totals{display:flex;justify-content:flex-end;margin-top:20px}
+  .totals table{font-size:13px;min-width:300px}
+  .totals td{padding:7px 12px;color:var(--ink-soft)}
+  .totals tr.grand td{font-family:"Archivo Black";font-size:17px;color:var(--ink);border-top:2px solid var(--ink);padding-top:12px;letter-spacing:1px}
+  .totals tr.grand td:last-child{color:var(--accent)}
+  .inv-foot{margin-top:26px;padding-top:20px;border-top:1.5px dashed var(--line-strong);display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:flex-end}
+  .notes{font-size:12px;color:var(--ink-soft);line-height:1.65}
+  .notes strong{color:var(--ink);font-family:"Archivo Black";font-size:10px;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:4px}
+  .sign{text-align:center;font-size:10px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:800}
+  .sign .line{border-top:2px solid var(--ink);padding-top:8px;margin-top:36px}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:12px;font-weight:700;font-size:13px;opacity:0;transition:all .25s;pointer-events:none;z-index:99;letter-spacing:.5px;box-shadow:var(--shadow)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.err{background:var(--warn)}
+
+  /* SVG muscle figure styling */
+  .muscle-svg path, .muscle-svg circle{stroke:#fff;stroke-width:1.6;fill:none;opacity:.92}
+  .muscle-svg .glow{stroke:var(--accent-2);stroke-width:2.2;opacity:1}
+  .muscle-svg .fill{fill:rgba(255,138,61,.18);stroke:none}
+  .invoice .watermark .muscle-svg path, .invoice .watermark .muscle-svg circle{stroke:var(--ink);stroke-width:1.4;fill:none}
+
+  /* HELP BAR */
+  .helpbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(90deg,#fff,#fff7f1);border:1.5px solid #ffd9c2;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--ink-soft);font-weight:600;box-shadow:0 6px 18px -10px rgba(255,90,31,.25)}
+  .helpbar .pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:7px 12px;border-radius:999px;font-weight:700;color:var(--ink);font-size:12px}
+  .helpbar .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .helpbar a{color:var(--accent);text-decoration:none;font-weight:800}
+  .helpbar a:hover{text-decoration:underline}
+  .helpbar .tip{display:inline-flex;align-items:center;gap:6px}
+
+  /* RESPONSIVE — MOBILE FIRST */
+  @media (max-width: 720px){
+    .wrap{padding:14px 12px 60px}
+    .hero{padding:20px 18px;border-radius:18px}
+    .hero h1{font-size:34px}
+    .hero-actions{justify-self:start;align-items:stretch;width:100%}
+    .actions{justify-content:flex-start;width:100%}
+    .actions .btn{flex:1;justify-content:center;padding:12px 10px;font-size:12px}
+    .pass-field{width:100%;justify-content:space-between}
+    .pass-field input{width:100%;flex:1}
+    .brand-lockup{width:100%;justify-content:flex-start;padding:12px 16px 12px 12px}
+    .brand-badge{width:60px;height:60px}
+    .brand-name{font-size:20px;letter-spacing:1.5px}
+    .brand-sub{font-size:9px;letter-spacing:3px}
+    .card{padding:16px;border-radius:14px}
+    .card h2{font-size:13px;letter-spacing:2px}
+    .row, .row-3{grid-template-columns:1fr;gap:10px}
+    .item-row{grid-template-columns:1fr 1fr 1fr 36px;gap:6px}
+    .item-row input{font-size:12.5px;padding:9px 10px}
+    .field input,.field select,.field textarea{font-size:15px;padding:11px 12px} /* 15px+ avoids iOS zoom */
+    .field label{font-size:10px}
+    .field label .hint{font-size:9px;padding:2px 6px}
+    .totals-mini{padding:12px;font-size:12.5px}
+    .totals-mini .line.grand{font-size:16px}
+    /* Invoice preview scales down */
+    .inv-head{padding:20px 18px}
+    .inv-brand{gap:10px}
+    .inv-brand .badge{width:50px;height:50px}
+    .inv-brand h2{font-size:22px}
+    .inv-brand .addr{font-size:10px}
+    .inv-meta{font-size:11px}
+    .inv-meta .num{font-size:18px}
+    .inv-body{padding:20px 18px}
+    .billto{grid-template-columns:1fr;gap:14px}
+    .billto > div[style*="text-align:right"]{text-align:left !important}
+    .inv-table th, .inv-table td{padding:9px 8px;font-size:11.5px}
+    .inv-table th{letter-spacing:1.5px;font-size:9.5px}
+    .totals table{min-width:100%;font-size:12px}
+    .inv-foot{grid-template-columns:1fr;gap:18px}
+    .sign{text-align:left}
+    .helpbar{font-size:11.5px;padding:10px 12px}
+    .helpbar .pill{font-size:11px;padding:6px 10px}
+  }
+  @media (max-width: 420px){
+    .hero h1{font-size:28px}
+    .actions .btn{font-size:11px;padding:11px 8px;letter-spacing:.3px}
+    .item-row{grid-template-columns:1fr 60px 80px 32px}
+  }
+
+  /* ADMIN / OWNER PANEL */
+  .admin-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:#fff;border-radius:18px;padding:16px 20px;margin-top:22px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .admin-bar::before{content:"";position:absolute;inset:0;background:radial-gradient(500px 200px at 100% 0%,rgba(255,90,31,.35),transparent 60%);pointer-events:none}
+  .admin-bar h3{margin:0;font-family:"Archivo Black";font-size:16px;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+  .admin-bar h3 .crown{background:var(--accent);color:#fff;padding:5px 10px;border-radius:8px;font-size:10px;letter-spacing:2px}
+  .admin-bar .stat-row{display:flex;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
+  .admin-bar .stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);padding:8px 14px;border-radius:10px;font-size:11.5px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:#cfcfd3;display:flex;flex-direction:column;gap:2px;min-width:90px}
+  .admin-bar .stat strong{font-family:"Archivo Black";font-size:18px;color:#fff;letter-spacing:.5px}
+  .admin-bar .stat.ok strong{color:#4ade80}
+  .admin-bar .stat.warn strong{color:#ff8a3d}
+  .admin-bar .stat.accent strong{color:var(--accent-2)}
+  .admin-bar .ab-actions{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1}
+
+  .admin-panel{margin-top:14px;background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);display:none}
+  .admin-panel.open{display:block;animation:slideDown .25s ease}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  .admin-panel .ap-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .admin-panel .ap-search{flex:1;min-width:200px;background:#fbfaf6;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;font-family:"Manrope";font-weight:500}
+  .admin-panel .ap-search:focus{outline:none;border-color:var(--accent);background:#fff}
+  .admin-panel .btn{color:var(--ink);border:1.5px solid var(--line);background:#fff}
+  .admin-panel .btn:hover{background:#fbfaf6;border-color:var(--accent);color:var(--accent)}
+  .admin-panel .btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+  .admin-panel .btn.primary:hover{background:var(--accent-2);color:#fff}
+  .admin-panel .btn.danger{color:var(--warn);border-color:#f3c0c0}
+  .admin-panel .btn.danger:hover{background:#fff0f0;color:var(--warn);border-color:var(--warn)}
+
+  .ledger{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  .ledger th{background:var(--ink);color:#fff;text-align:left;padding:11px 12px;font-family:"Archivo Black";font-size:10px;letter-spacing:2px;text-transform:uppercase;position:sticky;top:0}
+  .ledger th:first-child{border-radius:10px 0 0 0}
+  .ledger th:last-child{border-radius:0 10px 0 0;text-align:right}
+  .ledger td{padding:11px 12px;border-bottom:1px solid var(--line);color:var(--ink);vertical-align:middle}
+  .ledger tr:hover td{background:#fbfaf6}
+  .ledger .pill-st{display:inline-block;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+  .ledger .pill-st.PAID{background:rgba(22,163,74,.12);color:var(--ok)}
+  .ledger .pill-st.DUE{background:rgba(185,28,28,.1);color:var(--warn)}
+  .ledger .pill-st.PARTIAL{background:rgba(251,191,36,.15);color:#a16207}
+  .ledger td .row-act{display:inline-flex;gap:6px}
+  .ledger td button{background:transparent;border:1px solid var(--line);color:var(--muted);padding:5px 8px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:700}
+  .ledger td button:hover{color:var(--accent);border-color:var(--accent)}
+  .ledger td button.del:hover{color:var(--warn);border-color:var(--warn)}
+  .ledger .empty{text-align:center;color:var(--muted);padding:30px;font-style:italic}
+  .ledger-wrap{max-height:420px;overflow:auto;border:1.5px solid var(--line);border-radius:12px}
+
+  .pin-modal{position:fixed;inset:0;background:rgba(12,12,13,.65);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(4px)}
+  .pin-modal.open{display:flex}
+  .pin-modal .pin-card{background:#fff;border-radius:18px;padding:28px;max-width:380px;width:100%;box-shadow:var(--shadow)}
+  .pin-modal h4{margin:0 0 6px;font-family:"Archivo Black";font-size:18px;letter-spacing:1.5px;text-transform:uppercase}
+  .pin-modal p{margin:0 0 18px;font-size:13px;color:var(--ink-soft);line-height:1.5}
+  .pin-modal input{width:100%;background:#fbfaf6;border:1.5px solid var(--line);padding:14px;border-radius:12px;font-size:18px;font-family:"Manrope";font-weight:700;text-align:center;letter-spacing:6px}
+  .pin-modal input:focus{outline:none;border-color:var(--accent);background:#fff}
+  .pin-modal .pin-actions{display:flex;gap:8px;margin-top:14px}
+  .pin-modal .pin-actions button{flex:1;padding:12px;border-radius:10px;font-weight:800;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:"Manrope";border:0}
+  .pin-modal .pin-actions .cancel{background:#fbfaf6;color:var(--ink);border:1.5px solid var(--line)}
+  .pin-modal .pin-actions .ok{background:var(--accent);color:#fff}
+  .pin-modal .hint-small{font-size:11px;color:var(--muted);margin-top:10px;text-align:center;letter-spacing:.5px}
+
+  @media (max-width:720px){
+    .admin-bar{padding:14px 14px;border-radius:14px}
+    .admin-bar h3{font-size:13px;letter-spacing:1.5px}
+    .admin-bar .stat{padding:7px 10px;font-size:10px;min-width:75px}
+    .admin-bar .stat strong{font-size:15px}
+    .admin-panel{padding:14px;border-radius:14px}
+    .ledger th, .ledger td{padding:8px 8px;font-size:11.5px}
+    .ledger .col-mob-hide{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- Reusable SVG muscle anatomy (front view, stylized) -->
+<svg style="display:none">
+  <symbol id="muscle-figure" viewBox="0 0 220 320">
+    <!-- head -->
+    <circle cx="110" cy="32" r="22"/>
+    <!-- neck -->
+    <path d="M98 52 Q110 60 122 52"/>
+    <!-- traps + shoulders -->
+    <path d="M70 78 Q110 60 150 78"/>
+    <!-- pecs (fill) -->
+    <path class="fill" d="M75 84 Q110 78 145 84 Q150 110 130 124 Q110 118 110 100 Q110 118 90 124 Q70 110 75 84 Z"/>
+    <path d="M75 84 Q110 78 145 84 Q150 110 130 124 Q110 118 110 100 Q110 118 90 124 Q70 110 75 84 Z"/>
+    <path d="M110 92 L110 124"/>
+    <!-- abs grid -->
+    <path class="fill" d="M92 130 Q110 126 128 130 L128 200 Q110 206 92 200 Z"/>
+    <path d="M92 130 Q110 126 128 130 L128 200 Q110 206 92 200 Z"/>
+    <path d="M110 130 L110 202"/>
+    <path d="M93 148 Q110 144 127 148"/>
+    <path d="M93 168 Q110 164 127 168"/>
+    <path d="M93 188 Q110 184 127 188"/>
+    <!-- obliques -->
+    <path d="M88 134 Q78 168 90 200"/>
+    <path d="M132 134 Q142 168 130 200"/>
+    <!-- delts -->
+    <path class="fill" d="M62 86 Q54 108 66 124 Q80 116 78 96 Z"/>
+    <path d="M62 86 Q54 108 66 124 Q80 116 78 96 Z"/>
+    <path class="fill" d="M158 86 Q166 108 154 124 Q140 116 142 96 Z"/>
+    <path d="M158 86 Q166 108 154 124 Q140 116 142 96 Z"/>
+    <!-- biceps -->
+    <path class="glow fill" d="M50 122 Q42 150 56 172 Q70 158 68 132 Z"/>
+    <path class="glow" d="M50 122 Q42 150 56 172 Q70 158 68 132 Z"/>
+    <path class="glow fill" d="M170 122 Q178 150 164 172 Q150 158 152 132 Z"/>
+    <path class="glow" d="M170 122 Q178 150 164 172 Q150 158 152 132 Z"/>
+    <!-- forearms -->
+    <path d="M50 174 Q42 210 50 240"/>
+    <path d="M68 174 Q70 210 62 240"/>
+    <path d="M170 174 Q178 210 170 240"/>
+    <path d="M152 174 Q150 210 158 240"/>
+    <!-- quads -->
+    <path class="fill" d="M86 208 Q78 260 92 296 Q108 260 104 210 Z"/>
+    <path d="M86 208 Q78 260 92 296 Q108 260 104 210 Z"/>
+    <path class="fill" d="M134 208 Q142 260 128 296 Q112 260 116 210 Z"/>
+    <path d="M134 208 Q142 260 128 296 Q112 260 116 210 Z"/>
+    <path d="M95 220 L92 290"/>
+    <path d="M125 220 L128 290"/>
+    <!-- knees -->
+    <circle cx="91" cy="298" r="4"/>
+    <circle cx="129" cy="298" r="4"/>
+  </symbol>
+
+  <!-- Dumbbell icon -->
+  <symbol id="dumbbell" viewBox="0 0 64 32">
+    <rect x="2" y="6" width="8" height="20" rx="2"/>
+    <rect x="10" y="10" width="6" height="12" rx="1"/>
+    <rect x="16" y="14" width="32" height="4" rx="1"/>
+    <rect x="48" y="10" width="6" height="12" rx="1"/>
+    <rect x="54" y="6" width="8" height="20" rx="2"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+  <!-- HELP BAR -->
+  <div class="helpbar" role="region" aria-label="Help & support">
+    <div class="tip">💡 <span>Tap any field to type. Required fields are marked. PDF can be password-protected from the top right.</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <span class="pill"><span class="dot"></span>Help: <a href="tel:+919000000000">+91 90000 00000</a></span>
+      <span class="pill">✍️ Signature & Stamp are <strong style="color:var(--accent);margin-left:4px">optional</strong></span>
+    </div>
+  </div>
+
+  <!-- HERO HEADER -->
+  <header class="hero">
+    <div class="hero-row">
+      <div>
+        <span class="kicker">⚡ Boss Gym • Mirzapur</span>
+        <h1>Forge<br/>Your <em>Strength.</em></h1>
+        <p class="sub">Premium membership billing — generate professional, secured invoices for your members in seconds.</p>
+        <div class="brand-lockup" style="margin-top:18px">
+          <div class="brand-badge" id="logo-display">
+            <div class="placeholder">BG</div>
+          </div>
+          <div class="brand-text">
+            <div class="brand-name">BOSS GYM</div>
+            <div class="brand-sub">MIRZAPUR • UTTAR PRADESH</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-figure">
+        <svg class="muscle-svg" viewBox="0 0 220 320" width="220" height="240" aria-label="Muscle anatomy"><use href="#muscle-figure"/></svg>
+      </div>
+
+      <div class="hero-actions">
+        <div class="actions">
+          <button type="button" class="btn light" onclick="resetForm()">↺ Reset</button>
+          <button type="button" class="btn" onclick="exportImage()">🖼 PNG</button>
+          <button type="button" class="btn primary" onclick="exportPDF()">⬇ Export PDF</button>
+        </div>
+        <div class="pass-field" title="Optional: protect the PDF with a password">
+          🔒 PDF Pass
+          <input id="f-pdfpass" type="text" placeholder="optional" autocomplete="off" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- LEFT: Form -->
+    <div>
+      <div class="card">
+        <h2>Member Details</h2>
+        <div class="field"><label>Member Name <span class="hint">required • text</span></label><input id="f-name" placeholder="Full name — e.g. Rahul Sharma" autocomplete="off" /></div>
+        <div class="row">
+          <div class="field"><label>Phone <span class="hint">10-digit mobile</span></label><input id="f-phone" placeholder="+91 98765 43210" inputmode="tel" autocomplete="off" /></div>
+          <div class="field"><label>Member ID <span class="hint">format: BG-###</span></label><input id="f-mid" placeholder="BG-001" autocomplete="off" /></div>
+        </div>
+        <div class="field"><label>Address <span class="hint">House • Area • City</span></label><textarea id="f-addr" rows="2" placeholder="e.g. 12 Civil Lines, Mirzapur, UP - 231001"></textarea></div>
+      </div>
+
+      <div class="card">
+        <h2>Invoice Info</h2>
+        <div class="row-3">
+          <div class="field"><label>Invoice No. <span class="hint">auto • editable</span></label><input id="f-inv" placeholder="BG-00001" autocomplete="off" /></div>
+          <div class="field"><label>Date <span class="hint">YYYY-MM-DD</span></label><input id="f-date" type="date" /></div>
+          <div class="field"><label>Status <span class="hint">choose one</span></label>
+            <select id="f-status"><option>PAID</option><option>DUE</option><option>PARTIAL</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Payment Mode <span class="hint">choose one</span></label>
+            <select id="f-pay"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank Transfer</option></select>
+          </div>
+          <div class="field"><label>Trainer <span class="hint">optional • text</span></label><input id="f-trainer" placeholder="e.g. Vikas Yadav" autocomplete="off" /></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Plan / Services</h2>
+        <div id="items"></div>
+        <button class="add-item" onclick="addItem()">+ Add Item</button>
+
+        <div class="row" style="margin-top:14px">
+          <div class="field"><label>Discount (₹) <span class="hint">number • 0 if none</span></label><input id="f-disc" type="number" min="0" placeholder="0" oninput="recalc()" /></div>
+          <div class="field"><label>GST % <span class="hint">number • 0–28</span></label><input id="f-gst" type="number" min="0" max="100" placeholder="0" oninput="recalc()" /></div>
+        </div>
+
+        <div class="totals-mini">
+          <div class="line"><span>Subtotal</span><span id="t-sub">₹0.00</span></div>
+          <div class="line"><span>Discount</span><span id="t-disc">- ₹0.00</span></div>
+          <div class="line"><span>GST</span><span id="t-gst">₹0.00</span></div>
+          <div class="line grand"><span>Grand Total</span><span id="t-grand">₹0.00</span></div>
+        </div>
+
+        <div class="field" style="margin-top:14px"><label>Notes / Terms <span class="hint">optional • free text</span></label>
+          <textarea id="f-notes" rows="2" placeholder="e.g. Membership is non-transferable. Carry your ID card."></textarea>
+        </div>
+      </div>
+
+      <div class="card" id="sign-card">
+        <h2>Signature & Paid Stamp <span style="font-family:Manrope;font-weight:600;font-size:11px;color:var(--muted);letter-spacing:1px;margin-left:8px">— optional</span></h2>
+        <div style="margin:-6px 0 14px;padding:10px 12px;background:#fbfaf6;border-left:3px solid var(--accent);border-radius:8px;font-size:11.5px;color:var(--ink-soft);line-height:1.55;font-weight:500">
+          <strong style="font-family:'Archivo Black';font-size:10px;letter-spacing:1.5px;color:var(--ink);text-transform:uppercase;display:block;margin-bottom:3px">Note</strong>
+          Upload a transparent PNG or SVG (recommended size: 300×120 px for signature, 200×200 px for stamp). These are optional — leave blank for a plain "Authorized Signature" line. Need help? Call <a href="tel:+919000000000" style="color:var(--accent);font-weight:800;text-decoration:none">+91 90000 00000</a>.
+        </div>
+        <div class="row">
+          <div>
+            <label style="font-size:10.5px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;font-weight:800;display:block;margin-bottom:6px">Signature (PNG/SVG)</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <label class="add-item" style="margin:0;flex:1;text-align:center" for="sign-input">+ Upload Signature</label>
+              <button type="button" class="icon-btn" title="Remove" onclick="clearAsset('sign')">×</button>
+            </div>
+            <input id="sign-input" type="file" accept="image/png,image/svg+xml,image/jpeg" style="display:none" onchange="handleAsset(event,'sign')" />
+            <div id="sign-preview" style="margin-top:10px;height:54px;background:#fbfaf6;border:1.5px dashed var(--line-strong);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700">No signature</div>
+          </div>
+          <div>
+            <label style="font-size:10.5px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;font-weight:800;display:block;margin-bottom:6px">PAID Stamp (PNG/SVG)</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <label class="add-item" style="margin:0;flex:1;text-align:center" for="stamp-input">+ Upload Stamp</label>
+              <button type="button" class="icon-btn" title="Remove" onclick="clearAsset('stamp')">×</button>
+            </div>
+            <input id="stamp-input" type="file" accept="image/png,image/svg+xml,image/jpeg" style="display:none" onchange="handleAsset(event,'stamp')" />
+            <div id="stamp-preview" style="margin-top:10px;height:54px;background:#fbfaf6;border:1.5px dashed var(--line-strong);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700">No stamp</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff7f1;border:1.5px solid #ffd9c2;border-radius:10px;font-size:12px;color:var(--ink-soft);font-weight:600">
+          <input type="checkbox" id="f-stamp-paid-only" checked style="accent-color:var(--accent);width:16px;height:16px" />
+          <label for="f-stamp-paid-only" style="cursor:pointer">Show PAID stamp <strong>only when invoice status is PAID</strong></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Live preview -->
+    <div>
+      <div id="invoice" class="invoice">
+        <div class="watermark">
+          <div class="figure"><svg class="muscle-svg" viewBox="0 0 220 320" width="600" aria-hidden="true"><use href="#muscle-figure"/></svg></div>
+        </div>
+        <div class="inv-head">
+          <div class="inv-head-row">
+            <div class="inv-brand">
+              <div class="badge" id="p-badge"><div class="mono">BG</div></div>
+              <div>
+                <div class="tag">Strength • Discipline • Power</div>
+                <h2>BOSS GYM<br/>MIRZAPUR</h2>
+                <div class="addr">Mirzapur, Uttar Pradesh • +91 90000 00000</div>
+              </div>
+            </div>
+            <div class="inv-meta">
+              <div class="lbl">Invoice</div>
+              <div class="num" id="p-inv">#BG-0001</div>
+              <div style="margin-top:8px" id="p-date">26 Apr 2026</div>
+              <div><span class="stamp" id="p-stamp">PAID</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="inv-body">
+          <div class="billto">
+            <div>
+              <h4>Billed To</h4>
+              <p><strong id="p-name">Member Name</strong></p>
+              <p id="p-phone">+91 —</p>
+              <p id="p-addr">—</p>
+              <p>Member ID: <strong id="p-mid">—</strong></p>
+            </div>
+            <div style="text-align:right">
+              <h4>Payment</h4>
+              <p>Mode: <strong id="p-pay">Cash</strong></p>
+              <p>Trainer: <strong id="p-trainer">—</strong></p>
+              <p>Issued: <strong id="p-date2">—</strong></p>
+            </div>
+          </div>
+
+          <table class="inv-table">
+            <thead><tr><th>Description</th><th>Qty</th><th>Price</th><th>Amount</th></tr></thead>
+            <tbody id="p-items"></tbody>
+          </table>
+
+          <div class="totals">
+            <table>
+              <tr><td>Subtotal</td><td id="p-sub">₹0.00</td></tr>
+              <tr><td>Discount</td><td id="p-disc">- ₹0.00</td></tr>
+              <tr><td>GST</td><td id="p-gst">₹0.00</td></tr>
+              <tr class="grand"><td>GRAND TOTAL</td><td id="p-grand">₹0.00</td></tr>
+            </table>
+          </div>
+
+          <div class="inv-foot">
+            <div class="notes">
+              <strong>Notes</strong>
+              <div id="p-notes"></div>
+            </div>
+            <div class="sign">
+              <div id="p-sign-wrap" style="position:relative;height:64px;display:flex;align-items:flex-end;justify-content:center;gap:10px">
+                <img id="p-sign-img" alt="Signature" style="max-height:60px;max-width:140px;display:none;object-fit:contain" />
+                <img id="p-stamp-img" alt="Paid Stamp" style="max-height:74px;max-width:120px;display:none;object-fit:contain;transform:rotate(-8deg);opacity:.92;position:absolute;right:-6px;bottom:8px" />
+              </div>
+              <div class="line">Authorized Signature</div>
+            </div>
+          </div>
+        </div>
+        <div class="copyright-strip">© <span id="p-year">2026</span> Boss Gym Mirzapur • All Rights Reserved • Unauthorized duplication prohibited</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OWNER / ADMIN PANEL -->
+  <div class="admin-bar">
+    <h3><span class="crown">OWNER</span> Admin Dashboard</h3>
+    <div class="stat-row">
+      <div class="stat"><span>Total Bills</span><strong id="ad-total">0</strong></div>
+      <div class="stat accent"><span>Revenue</span><strong id="ad-revenue">₹0</strong></div>
+      <div class="stat ok"><span>Paid</span><strong id="ad-paid">0</strong></div>
+      <div class="stat warn"><span>Due</span><strong id="ad-due">0</strong></div>
+    </div>
+    <div class="ab-actions">
+      <button type="button" class="btn" onclick="toggleAdmin()" id="ad-toggle-btn">📒 View All Bills</button>
+      <button type="button" class="btn primary" onclick="exportAllBillsPDF()">⬇ Download Full Ledger PDF</button>
+    </div>
+  </div>
+
+  <div class="admin-panel" id="admin-panel">
+    <div class="ap-head">
+      <input type="text" id="ad-search" class="ap-search" placeholder="🔍 Search by member name, phone, invoice #, or status…" oninput="renderLedger()" />
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn" onclick="exportLedgerCSV()">📊 CSV</button>
+        <button type="button" class="btn primary" onclick="exportAllBillsPDF()">⬇ Ledger PDF</button>
+        <button type="button" class="btn danger" onclick="clearAllBills()">🗑 Clear All</button>
+      </div>
+    </div>
+    <div class="ledger-wrap">
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th>Date</th><th>Invoice #</th><th>Member</th>
+            <th class="col-mob-hide">Phone</th><th class="col-mob-hide">Mode</th>
+            <th>Status</th><th style="text-align:right">Total</th><th style="text-align:right">Action</th>
+          </tr>
+        </thead>
+        <tbody id="ledger-body"></tbody>
+      </table>
+    </div>
+    <p style="margin:12px 0 0;font-size:11.5px;color:var(--muted);line-height:1.5">
+      📌 Bills are saved automatically to this device when you export PDF or PNG. The Ledger PDF can be password-protected using the <strong style="color:var(--accent)">PDF Pass</strong> field at the top.
+    </p>
+  </div>
+</div>
+
+<!-- PIN Modal -->
+<div class="pin-modal" id="pin-modal">
+  <div class="pin-card">
+    <h4>🔐 Owner Access</h4>
+    <p>Enter the 4-digit owner PIN to view the bill ledger. <strong>Default PIN: 1234</strong> — change it from the modal after first login.</p>
+    <input type="password" id="pin-input" maxlength="6" placeholder="••••" inputmode="numeric" autocomplete="off" />
+    <div class="pin-actions">
+      <button type="button" class="cancel" onclick="closePinModal()">Cancel</button>
+      <button type="button" class="ok" onclick="verifyPin()">Unlock</button>
+    </div>
+    <div class="hint-small">
+      <a href="#" onclick="event.preventDefault();changePin()" style="color:var(--accent);text-decoration:none;font-weight:700">Change PIN</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+const PLANS = [
+  {name:"Monthly Membership", price:1000},
+  {name:"Quarterly Membership (3 mo)", price:2700},
+  {name:"Half-Yearly Membership (6 mo)", price:5000},
+  {name:"Annual Membership (12 mo)", price:9000},
+  {name:"Personal Training (per month)", price:2500},
+  {name:"Admission Fee", price:500},
+  {name:"Diet Plan Consultation", price:800},
+];
+
+const itemsEl = document.getElementById('items');
+function addItem(desc="", qty="", price=""){
+  const i = document.createElement('div');
+  i.className = 'item-row';
+  i.innerHTML = `
+    <input class="i-desc" list="plans" placeholder="Type or pick a plan…" value="${desc}" />
+    <input class="i-qty" type="number" min="1" placeholder="Qty" value="${qty}" />
+    <input class="i-price" type="number" min="0" placeholder="Price ₹" value="${price}" />
+    <button class="icon-btn" title="Remove" type="button">×</button>
+  `;
+  itemsEl.appendChild(i);
+  i.querySelector('.icon-btn').onclick = ()=>{ i.remove(); recalc(); };
+  i.querySelectorAll('input').forEach(inp=>inp.addEventListener('input', e=>{
+    if(e.target.classList.contains('i-desc')){
+      const p = PLANS.find(p=>p.name.toLowerCase()===e.target.value.toLowerCase());
+      if(p){
+        i.querySelector('.i-price').value = p.price;
+        if(!i.querySelector('.i-qty').value) i.querySelector('.i-qty').value = 1;
+      }
+    }
+    recalc();
+  }));
+  recalc();
+}
+const dl = document.createElement('datalist'); dl.id='plans';
+dl.innerHTML = PLANS.map(p=>`<option value="${p.name}">`).join('');
+document.body.appendChild(dl);
+
+const $ = id => document.getElementById(id);
+const fmt = n => "₹" + (Number(n)||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+let LOGO_DATA_URL = "data:image/jpeg;base64,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"; // default Boss Gym logo (embedded)
+function handleLogo(e){
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    LOGO_DATA_URL = ev.target.result;
+    try{ localStorage.setItem('bg_logo', LOGO_DATA_URL); }catch(_){}
+    renderLogo();
+    toast('Logo uploaded ✓');
+  };
+  reader.readAsDataURL(file);
+}
+function renderLogo(){
+  const headerSlot = document.getElementById('logo-display');
+  const badge = document.getElementById('p-badge');
+  if(LOGO_DATA_URL){
+    headerSlot.innerHTML = `<img src="${LOGO_DATA_URL}" alt="Boss Gym Logo"/>`;
+    badge.innerHTML = `<img src="${LOGO_DATA_URL}" alt="Boss Gym Logo"/>`;
+  } else {
+    headerSlot.innerHTML = `<div class="placeholder">BG</div>`;
+    badge.innerHTML = `<div class="mono">BG</div>`;
+  }
+}
+
+// Signature & Stamp asset handling
+let SIGN_DATA_URL = null, STAMP_DATA_URL = null;
+function handleAsset(e, kind){
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const url = ev.target.result;
+    if(kind==='sign'){ SIGN_DATA_URL = url; try{localStorage.setItem('bg_sign',url)}catch(_){} }
+    else { STAMP_DATA_URL = url; try{localStorage.setItem('bg_stamp',url)}catch(_){} }
+    renderAssets(); recalc();
+    toast((kind==='sign'?'Signature':'Stamp') + ' uploaded ✓');
+  };
+  reader.readAsDataURL(file);
+}
+function clearAsset(kind){
+  if(kind==='sign'){ SIGN_DATA_URL=null; try{localStorage.removeItem('bg_sign')}catch(_){} $('sign-input').value=''; }
+  else { STAMP_DATA_URL=null; try{localStorage.removeItem('bg_stamp')}catch(_){} $('stamp-input').value=''; }
+  renderAssets(); recalc();
+}
+function renderAssets(){
+  const sp = $('sign-preview');
+  if(SIGN_DATA_URL){ sp.innerHTML = `<img src="${SIGN_DATA_URL}" style="max-height:48px;max-width:100%;object-fit:contain"/>`; sp.style.borderStyle='solid'; }
+  else { sp.textContent='No signature'; sp.style.borderStyle='dashed'; }
+  const tp = $('stamp-preview');
+  if(STAMP_DATA_URL){ tp.innerHTML = `<img src="${STAMP_DATA_URL}" style="max-height:48px;max-width:100%;object-fit:contain"/>`; tp.style.borderStyle='solid'; }
+  else { tp.textContent='No stamp'; tp.style.borderStyle='dashed'; }
+}
+
+function collect(){
+  const items = [...document.querySelectorAll('.item-row')].map(r=>({
+    desc:r.querySelector('.i-desc').value || '—',
+    qty:Number(r.querySelector('.i-qty').value)||0,
+    price:Number(r.querySelector('.i-price').value)||0,
+  })).filter(x=>x.qty>0);
+  const sub = items.reduce((s,x)=>s+x.qty*x.price,0);
+  const disc = Number($('f-disc').value)||0;
+  const gstP = Number($('f-gst').value)||0;
+  const taxable = Math.max(sub-disc,0);
+  const gst = taxable*gstP/100;
+  const grand = taxable+gst;
+  return {items,sub,disc,gst,grand,gstP};
+}
+
+function recalc(){
+  const d = collect();
+  $('t-sub').textContent = fmt(d.sub);
+  $('t-disc').textContent = "- "+fmt(d.disc);
+  $('t-gst').textContent = fmt(d.gst);
+  $('t-grand').textContent = fmt(d.grand);
+
+  $('p-name').textContent = $('f-name').value || 'Member Name';
+  $('p-phone').textContent = $('f-phone').value || '—';
+  $('p-addr').textContent = $('f-addr').value || '—';
+  $('p-mid').textContent = $('f-mid').value || '—';
+  $('p-inv').textContent = '#'+($('f-inv').value || 'BG-0001');
+  const dateStr = $('f-date').value ? new Date($('f-date').value).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+  $('p-date').textContent = dateStr;
+  $('p-date2').textContent = dateStr;
+  $('p-pay').textContent = $('f-pay').value;
+  $('p-trainer').textContent = $('f-trainer').value || '—';
+  const status = $('f-status').value;
+  const stamp = $('p-stamp');
+  stamp.textContent = status;
+  stamp.className = 'stamp' + (status==='PAID' ? '' : status==='PARTIAL' ? ' partial' : ' due');
+
+  // Signature & Stamp display on invoice
+  const signImg = $('p-sign-img');
+  const stampImg = $('p-stamp-img');
+  if(SIGN_DATA_URL){ signImg.src = SIGN_DATA_URL; signImg.style.display='block'; }
+  else { signImg.style.display='none'; }
+  const paidOnly = $('f-stamp-paid-only').checked;
+  const showStamp = STAMP_DATA_URL && (!paidOnly || status==='PAID');
+  if(showStamp){ stampImg.src = STAMP_DATA_URL; stampImg.style.display='block'; }
+  else { stampImg.style.display='none'; }
+
+  $('p-items').innerHTML = d.items.length ? d.items.map(x=>`
+    <tr><td>${x.desc}</td><td>${x.qty}</td><td>${fmt(x.price)}</td><td>${fmt(x.qty*x.price)}</td></tr>
+  `).join('') : `<tr><td colspan="4" style="text-align:center;color:#9a9aa0;padding:22px">No items added</td></tr>`;
+
+  $('p-sub').textContent = fmt(d.sub);
+  $('p-disc').textContent = "- "+fmt(d.disc);
+  $('p-gst').textContent = fmt(d.gst) + (d.gstP?` (${d.gstP}%)`:'');
+  $('p-grand').textContent = fmt(d.grand);
+  $('p-notes').textContent = $('f-notes').value;
+}
+
+['f-name','f-phone','f-mid','f-addr','f-inv','f-date','f-status','f-pay','f-trainer','f-notes']
+  .forEach(id=>$(id).addEventListener('input',recalc));
+$('f-stamp-paid-only').addEventListener('change', recalc);
+
+function toast(msg, err){
+  const t=$('toast'); t.textContent=msg;
+  t.className = 'toast show' + (err?' err':'');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+async function exportImage(){
+  const el = document.getElementById('invoice');
+  const canvas = await html2canvas(el,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+  const a = document.createElement('a');
+  a.download = `BossGym-Invoice-${$('f-inv').value||'BG-0001'}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  saveBillToHistory();
+  toast('PNG downloaded • Saved to ledger ✓');
+}
+
+async function exportPDF(){
+  const pass = ($('f-pdfpass').value||'').trim();
+  const { jsPDF } = window.jspdf;
+  const el = document.getElementById('invoice');
+  const canvas = await html2canvas(el,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+  const img = canvas.toDataURL('image/png');
+  const pdfOpts = {orientation:'p',unit:'mm',format:'a4'};
+  if(pass){
+    pdfOpts.encryption = {
+      userPassword: pass,
+      ownerPassword: pass + '_owner',
+      userPermissions: ['print']
+    };
+  }
+  const pdf = new jsPDF(pdfOpts);
+  pdf.setProperties({
+    title: `Boss Gym Invoice ${$('f-inv').value||''}`,
+    subject: 'Gym Membership Invoice',
+    author: 'Boss Gym Mirzapur',
+    creator: 'Boss Gym Mirzapur Billing System',
+    keywords: 'invoice, boss gym, mirzapur, membership, copyright'
+  });
+  const pw = pdf.internal.pageSize.getWidth();
+  const ph = pdf.internal.pageSize.getHeight();
+  const margin = 10;
+  const w = pw - margin*2;
+  const h = canvas.height * w / canvas.width;
+
+  const drawBackdrop = ()=>{
+    pdf.saveGraphicsState && pdf.saveGraphicsState();
+    if(pdf.GState){ pdf.setGState(new pdf.GState({opacity:0.06})); }
+    pdf.setFont('helvetica','bold');
+    pdf.setTextColor(12,12,13);
+    pdf.setFontSize(54);
+    pdf.text('BOSS GYM • MIRZAPUR', pw/2, ph/2, {align:'center', angle:-28});
+    if(pdf.GState){ pdf.setGState(new pdf.GState({opacity:1})); }
+    pdf.restoreGraphicsState && pdf.restoreGraphicsState();
+    pdf.setFillColor(12,12,13);
+    pdf.rect(0, ph-9, pw, 9, 'F');
+    pdf.setTextColor(255,217,194);
+    pdf.setFontSize(7.5);
+    pdf.text(`© ${new Date().getFullYear()} BOSS GYM MIRZAPUR  •  ALL RIGHTS RESERVED  •  UNAUTHORIZED DUPLICATION PROHIBITED`, pw/2, ph-3.2, {align:'center'});
+  };
+
+  if(h <= ph - margin*2){
+    pdf.addImage(img,'PNG',margin,margin,w,h);
+    drawBackdrop();
+  } else {
+    let sY = 0;
+    const pageH = ph - margin*2;
+    const sliceCanvasH = canvas.width * pageH / w;
+    let first = true;
+    while(sY < canvas.height){
+      if(!first) pdf.addPage();
+      first = false;
+      const c = document.createElement('canvas');
+      c.width = canvas.width;
+      c.height = Math.min(sliceCanvasH, canvas.height - sY);
+      c.getContext('2d').drawImage(canvas,0,sY,c.width,c.height,0,0,c.width,c.height);
+      const slice = c.toDataURL('image/png');
+      const sH = c.height * w / c.width;
+      pdf.addImage(slice,'PNG',margin,margin,w,sH);
+      drawBackdrop();
+      sY += c.height;
+    }
+  }
+  pdf.save(`BossGym-Invoice-${$('f-inv').value||'BG-0001'}.pdf`);
+  saveBillToHistory();
+  toast((pass ? 'Secured PDF downloaded 🔒' : 'PDF downloaded') + ' • Saved to ledger');
+}
+
+/* ===================== OWNER / ADMIN: BILL HISTORY ===================== */
+const HIST_KEY = 'bg_history_v1';
+const PIN_KEY  = 'bg_owner_pin';
+const ADMIN_OK_KEY = 'bg_admin_unlocked';
+const DEFAULT_PIN = '1234';
+
+function loadHistory(){
+  try { return JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); }
+  catch(_) { return []; }
+}
+function saveHistoryArr(arr){
+  try { localStorage.setItem(HIST_KEY, JSON.stringify(arr)); } catch(_){}
+}
+function saveBillToHistory(){
+  const d = collect();
+  if(!d.items.length) return; // don't store empty bills
+  const bill = {
+    id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    inv: $('f-inv').value || 'BG-0001',
+    date: $('f-date').value || new Date().toISOString().slice(0,10),
+    name: $('f-name').value || '—',
+    phone: $('f-phone').value || '—',
+    mid: $('f-mid').value || '—',
+    pay: $('f-pay').value,
+    status: $('f-status').value,
+    trainer: $('f-trainer').value || '—',
+    items: d.items,
+    sub: d.sub, disc: d.disc, gst: d.gst, gstP: d.gstP, grand: d.grand,
+    notes: $('f-notes').value || '',
+    createdAt: Date.now()
+  };
+  const arr = loadHistory();
+  // dedupe by invoice number — replace existing if same inv #
+  const idx = arr.findIndex(b=>b.inv === bill.inv);
+  if(idx >= 0) arr[idx] = bill; else arr.unshift(bill);
+  saveHistoryArr(arr);
+  refreshAdminStats();
+  if($('admin-panel').classList.contains('open')) renderLedger();
+}
+
+function refreshAdminStats(){
+  const arr = loadHistory();
+  const paid = arr.filter(b=>b.status==='PAID');
+  const due  = arr.filter(b=>b.status==='DUE' || b.status==='PARTIAL');
+  const revenue = paid.reduce((s,b)=>s+(b.grand||0),0);
+  $('ad-total').textContent = arr.length;
+  $('ad-paid').textContent = paid.length;
+  $('ad-due').textContent = due.length;
+  $('ad-revenue').textContent = '₹' + Math.round(revenue).toLocaleString('en-IN');
+}
+
+function renderLedger(){
+  const q = ($('ad-search').value || '').trim().toLowerCase();
+  const arr = loadHistory().filter(b=>{
+    if(!q) return true;
+    return [b.inv,b.name,b.phone,b.mid,b.status,b.pay,b.trainer].some(v=>String(v||'').toLowerCase().includes(q));
+  });
+  const body = $('ledger-body');
+  if(!arr.length){
+    body.innerHTML = `<tr><td colspan="8" class="empty">No bills yet. Generate an invoice and export it — it will appear here automatically.</td></tr>`;
+    return;
+  }
+  body.innerHTML = arr.map(b=>`
+    <tr>
+      <td>${formatDateShort(b.date)}</td>
+      <td><strong>#${b.inv}</strong></td>
+      <td>${escapeHtml(b.name)}<div style="font-size:10px;color:var(--muted);letter-spacing:.5px">${escapeHtml(b.mid)}</div></td>
+      <td class="col-mob-hide">${escapeHtml(b.phone)}</td>
+      <td class="col-mob-hide">${escapeHtml(b.pay)}</td>
+      <td><span class="pill-st ${b.status}">${b.status}</span></td>
+      <td style="text-align:right;font-weight:800">${fmt(b.grand)}</td>
+      <td style="text-align:right">
+        <span class="row-act">
+          <button title="Load into form" onclick="loadBill('${b.id}')">↻</button>
+          <button class="del" title="Delete" onclick="deleteBill('${b.id}')">×</button>
+        </span>
+      </td>
+    </tr>
+  `).join('');
+}
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function formatDateShort(iso){
+  if(!iso) return '—';
+  try { return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'}); }
+  catch(_){ return iso; }
+}
+
+function deleteBill(id){
+  if(!confirm('Delete this bill from history? This cannot be undone.')) return;
+  saveHistoryArr(loadHistory().filter(b=>b.id!==id));
+  refreshAdminStats(); renderLedger();
+  toast('Bill deleted');
+}
+function clearAllBills(){
+  const arr = loadHistory();
+  if(!arr.length){ toast('No bills to clear', true); return; }
+  if(!confirm(`Permanently delete ALL ${arr.length} bills from this device? This cannot be undone.`)) return;
+  if(!confirm('Are you absolutely sure? Type the owner PIN if prompted again to confirm.')) return;
+  saveHistoryArr([]);
+  refreshAdminStats(); renderLedger();
+  toast('All bills cleared');
+}
+function loadBill(id){
+  const b = loadHistory().find(x=>x.id===id);
+  if(!b) return;
+  $('f-name').value = b.name==='—'?'':b.name;
+  $('f-phone').value = b.phone==='—'?'':b.phone;
+  $('f-mid').value = b.mid==='—'?'':b.mid;
+  $('f-inv').value = b.inv;
+  $('f-date').value = b.date;
+  $('f-status').value = b.status;
+  $('f-pay').value = b.pay;
+  $('f-trainer').value = b.trainer==='—'?'':b.trainer;
+  $('f-notes').value = b.notes || '';
+  $('f-disc').value = b.disc || '';
+  $('f-gst').value = b.gstP || '';
+  itemsEl.innerHTML = '';
+  (b.items||[]).forEach(it=>addItem(it.desc, it.qty, it.price));
+  if(!b.items || !b.items.length) addItem();
+  recalc();
+  closeAdminPanel();
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast(`Loaded invoice #${b.inv}`);
+}
+
+/* ----- PIN access ----- */
+function getStoredPin(){ try{ return localStorage.getItem(PIN_KEY) || DEFAULT_PIN; }catch(_){ return DEFAULT_PIN; } }
+function isAdminUnlocked(){ return sessionStorage.getItem(ADMIN_OK_KEY) === '1'; }
+function toggleAdmin(){
+  const panel = $('admin-panel');
+  if(panel.classList.contains('open')){
+    closeAdminPanel(); return;
+  }
+  if(isAdminUnlocked()){ openAdminPanel(); return; }
+  openPinModal();
+}
+function openAdminPanel(){
+  $('admin-panel').classList.add('open');
+  $('ad-toggle-btn').innerHTML = '✕ Hide Bills';
+  renderLedger();
+}
+function closeAdminPanel(){
+  $('admin-panel').classList.remove('open');
+  $('ad-toggle-btn').innerHTML = '📒 View All Bills';
+}
+function openPinModal(){
+  $('pin-modal').classList.add('open');
+  setTimeout(()=>$('pin-input').focus(), 50);
+}
+function closePinModal(){
+  $('pin-modal').classList.remove('open');
+  $('pin-input').value = '';
+}
+function verifyPin(){
+  const v = ($('pin-input').value||'').trim();
+  if(v === getStoredPin()){
+    sessionStorage.setItem(ADMIN_OK_KEY,'1');
+    closePinModal();
+    openAdminPanel();
+    toast('Owner access granted ✓');
+  } else {
+    toast('Wrong PIN', true);
+    $('pin-input').value=''; $('pin-input').focus();
+  }
+}
+function changePin(){
+  const cur = prompt('Enter current PIN:');
+  if(cur === null) return;
+  if(cur !== getStoredPin()){ alert('Wrong current PIN.'); return; }
+  const nu = prompt('Enter new 4–6 digit PIN:');
+  if(!nu || !/^\d{4,6}$/.test(nu)){ alert('PIN must be 4–6 digits.'); return; }
+  const nu2 = prompt('Confirm new PIN:');
+  if(nu !== nu2){ alert('PINs do not match.'); return; }
+  try{ localStorage.setItem(PIN_KEY, nu); }catch(_){}
+  toast('PIN updated ✓');
+}
+$('pin-input') && $('pin-input').addEventListener('keydown', e=>{ if(e.key==='Enter') verifyPin(); });
+
+/* ----- CSV export ----- */
+function exportLedgerCSV(){
+  const arr = loadHistory();
+  if(!arr.length){ toast('No bills to export', true); return; }
+  const rows = [['Date','Invoice','Member','Phone','Member ID','Payment','Status','Trainer','Subtotal','Discount','GST%','GST','Grand Total','Notes']];
+  arr.forEach(b=>rows.push([b.date,b.inv,b.name,b.phone,b.mid,b.pay,b.status,b.trainer,b.sub,b.disc,b.gstP,b.gst,b.grand,(b.notes||'').replace(/\n/g,' ')]));
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `BossGym-Ledger-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV downloaded');
+}
+
+/* ----- Full ledger PDF ----- */
+async function exportAllBillsPDF(){
+  if(!isAdminUnlocked()){ openPinModal(); return; }
+  const arr = loadHistory();
+  if(!arr.length){ toast('No bills to export', true); return; }
+  const pass = ($('f-pdfpass').value||'').trim();
+  const { jsPDF } = window.jspdf;
+  const opts = {orientation:'l',unit:'mm',format:'a4'};
+  if(pass){ opts.encryption = { userPassword: pass, ownerPassword: pass+'_owner', userPermissions:['print'] }; }
+  const pdf = new jsPDF(opts);
+  pdf.setProperties({
+    title:'Boss Gym — Master Ledger',
+    subject:'All Invoices Ledger',
+    author:'Boss Gym Mirzapur',
+    creator:'Boss Gym Mirzapur Billing System',
+    keywords:'ledger, invoices, boss gym, mirzapur'
+  });
+  const pw = pdf.internal.pageSize.getWidth();
+  const ph = pdf.internal.pageSize.getHeight();
+
+  // Backdrop on every page
+  const backdrop = (pageNum, totalPages) => {
+    pdf.saveGraphicsState && pdf.saveGraphicsState();
+    if(pdf.GState){ pdf.setGState(new pdf.GState({opacity:0.05})); }
+    pdf.setFont('helvetica','bold');
+    pdf.setTextColor(12,12,13);
+    pdf.setFontSize(60);
+    pdf.text('BOSS GYM MIRZAPUR', pw/2, ph/2, {align:'center', angle:-22});
+    if(pdf.GState){ pdf.setGState(new pdf.GState({opacity:1})); }
+    pdf.restoreGraphicsState && pdf.restoreGraphicsState();
+    // footer strip
+    pdf.setFillColor(12,12,13);
+    pdf.rect(0, ph-8, pw, 8, 'F');
+    pdf.setTextColor(255,217,194);
+    pdf.setFontSize(7);
+    pdf.text(`© ${new Date().getFullYear()} BOSS GYM MIRZAPUR  •  CONFIDENTIAL OWNER LEDGER  •  Page ${pageNum} of ${totalPages}`, pw/2, ph-3, {align:'center'});
+  };
+
+  // Header block
+  const drawHeader = ()=>{
+    pdf.setFillColor(12,12,13);
+    pdf.rect(0,0,pw,28,'F');
+    pdf.setFillColor(255,90,31);
+    pdf.rect(0,28,pw,1.6,'F');
+    pdf.setTextColor(255,255,255);
+    pdf.setFont('helvetica','bold'); pdf.setFontSize(18);
+    pdf.text('BOSS GYM MIRZAPUR — MASTER LEDGER', 12, 13);
+    pdf.setFont('helvetica','normal'); pdf.setFontSize(9);
+    pdf.setTextColor(207,207,211);
+    const totalPaid = arr.filter(b=>b.status==='PAID').reduce((s,b)=>s+b.grand,0);
+    const totalAll = arr.reduce((s,b)=>s+b.grand,0);
+    pdf.text(`Generated: ${new Date().toLocaleString('en-IN')}   |   Bills: ${arr.length}   |   Paid Revenue: Rs. ${Math.round(totalPaid).toLocaleString('en-IN')}   |   Billed Total: Rs. ${Math.round(totalAll).toLocaleString('en-IN')}`, 12, 22);
+  };
+
+  // Table column layout (landscape A4 = 297mm wide)
+  const cols = [
+    {key:'date', label:'Date', w:22, align:'left'},
+    {key:'inv', label:'Invoice #', w:30, align:'left'},
+    {key:'name', label:'Member', w:50, align:'left'},
+    {key:'phone', label:'Phone', w:32, align:'left'},
+    {key:'mid', label:'Member ID', w:24, align:'left'},
+    {key:'pay', label:'Mode', w:22, align:'left'},
+    {key:'status', label:'Status', w:20, align:'left'},
+    {key:'sub', label:'Subtotal', w:24, align:'right', num:true},
+    {key:'disc', label:'Disc.', w:18, align:'right', num:true},
+    {key:'gst', label:'GST', w:18, align:'right', num:true},
+    {key:'grand', label:'Total', w:25, align:'right', num:true, bold:true}
+  ];
+  const tableW = cols.reduce((s,c)=>s+c.w,0);
+  const startX = (pw - tableW)/2;
+  let y = 38;
+  const rowH = 7;
+
+  const drawTableHead = ()=>{
+    pdf.setFillColor(12,12,13);
+    pdf.rect(startX, y, tableW, 8, 'F');
+    pdf.setTextColor(255,255,255);
+    pdf.setFont('helvetica','bold'); pdf.setFontSize(8);
+    let x = startX;
+    cols.forEach(c=>{
+      const tx = c.align==='right' ? x + c.w - 2 : x + 2;
+      pdf.text(c.label.toUpperCase(), tx, y+5.4, {align: c.align==='right'?'right':'left'});
+      x += c.w;
+    });
+    y += 8;
+    pdf.setTextColor(20,20,20);
+    pdf.setFont('helvetica','normal'); pdf.setFontSize(8.5);
+  };
+
+  const newPage = ()=>{
+    pdf.addPage();
+    drawHeader();
+    y = 38;
+    drawTableHead();
+  };
+
+  drawHeader();
+  drawTableHead();
+
+  let zebra = false;
+  for(let i=0;i<arr.length;i++){
+    const b = arr[i];
+    if(y + rowH > ph - 14){ newPage(); zebra=false; }
+    if(zebra){ pdf.setFillColor(251,250,246); pdf.rect(startX, y, tableW, rowH, 'F'); }
+    zebra = !zebra;
+    let x = startX;
+    cols.forEach(c=>{
+      let v = b[c.key];
+      if(c.num) v = 'Rs. ' + Math.round(Number(v)||0).toLocaleString('en-IN');
+      else if(c.key==='date') v = formatDateShort(b.date);
+      else v = String(v||'—');
+      // truncate
+      const maxChars = Math.floor(c.w / 1.7);
+      if(v.length > maxChars) v = v.slice(0,maxChars-1)+'…';
+      if(c.bold) pdf.setFont('helvetica','bold'); else pdf.setFont('helvetica','normal');
+      // status colored chip
+      if(c.key==='status'){
+        const col = b.status==='PAID' ? [22,163,74] : b.status==='DUE' ? [185,28,28] : [161,98,7];
+        pdf.setTextColor(col[0],col[1],col[2]);
+        pdf.setFont('helvetica','bold');
+      } else if(c.key==='grand') {
+        pdf.setTextColor(255,90,31);
+      } else {
+        pdf.setTextColor(20,20,20);
+      }
+      const tx = c.align==='right' ? x + c.w - 2 : x + 2;
+      pdf.text(v, tx, y + rowH - 2, {align: c.align==='right'?'right':'left'});
+      x += c.w;
+    });
+    pdf.setDrawColor(228,226,220);
+    pdf.line(startX, y+rowH, startX+tableW, y+rowH);
+    y += rowH;
+  }
+
+  // Totals row
+  if(y + 12 > ph - 14) newPage();
+  pdf.setFillColor(12,12,13);
+  pdf.rect(startX, y, tableW, 10, 'F');
+  pdf.setTextColor(255,255,255); pdf.setFont('helvetica','bold'); pdf.setFontSize(10);
+  const totalSum = arr.reduce((s,b)=>s+b.grand,0);
+  const paidSum  = arr.filter(b=>b.status==='PAID').reduce((s,b)=>s+b.grand,0);
+  const dueSum   = arr.filter(b=>b.status!=='PAID').reduce((s,b)=>s+b.grand,0);
+  pdf.text(`GRAND TOTAL — ${arr.length} bills`, startX+2, y+6.5);
+  pdf.setTextColor(74,222,128);
+  pdf.text(`PAID: Rs. ${Math.round(paidSum).toLocaleString('en-IN')}`, startX+tableW/2 - 25, y+6.5);
+  pdf.setTextColor(255,138,61);
+  pdf.text(`OUTSTANDING: Rs. ${Math.round(dueSum).toLocaleString('en-IN')}`, startX+tableW/2 + 35, y+6.5);
+  pdf.setTextColor(255,255,255);
+  pdf.text(`Rs. ${Math.round(totalSum).toLocaleString('en-IN')}`, startX+tableW-2, y+6.5, {align:'right'});
+
+  // Apply backdrop on every page (after content, so backdrop is on top with low opacity acts like watermark behind)
+  const total = pdf.internal.getNumberOfPages();
+  for(let p=1; p<=total; p++){
+    pdf.setPage(p);
+    backdrop(p, total);
+  }
+
+  pdf.save(`BossGym-MasterLedger-${new Date().toISOString().slice(0,10)}.pdf`);
+  toast(pass ? 'Secured ledger PDF downloaded 🔒' : 'Ledger PDF downloaded ✓');
+}
+
+function resetForm(){
+  let ok = true;
+  try { ok = confirm('Reset all fields and start a fresh invoice?'); } catch(_) { ok = true; }
+  if(!ok) return;
+  try {
+    // text/number/textarea — all blank, format hints stay visible via placeholders
+    ['f-name','f-phone','f-mid','f-addr','f-inv','f-trainer','f-pdfpass','f-disc','f-gst','f-notes']
+      .forEach(id=>{ const el=$(id); if(el) el.value=''; });
+    $('f-status').value = 'PAID';
+    $('f-pay').value    = 'Cash';
+    if($('f-stamp-paid-only')) $('f-stamp-paid-only').checked = true;
+    // clear file inputs (so the same file can be re-uploaded)
+    ['logo-input','sign-input','stamp-input'].forEach(id=>{ const el=$(id); if(el) el.value=''; });
+    // wipe items + add a single empty row (no defaults)
+    itemsEl.innerHTML = '';
+    $('f-date').value = new Date().toISOString().slice(0,10);
+    $('f-inv').value  = 'BG-' + String(Date.now()).slice(-5);
+    addItem();
+    recalc();
+    toast('Form reset ✓');
+  } catch(err){
+    console.error('Reset failed:', err);
+    toast('Reset error — check console', true);
+  }
+}
+
+function init(){
+  // restore logo / signature / stamp if previously uploaded
+  try{
+    const saved = localStorage.getItem('bg_logo');
+    if(saved){ LOGO_DATA_URL = saved; }
+    const s = localStorage.getItem('bg_sign');  if(s) SIGN_DATA_URL  = s;
+    const t = localStorage.getItem('bg_stamp'); if(t) STAMP_DATA_URL = t;
+  }catch(_){}
+  renderLogo();
+  renderAssets();
+
+  // Only auto-fill the two technical fields; everything else stays empty
+  $('f-date').value = new Date().toISOString().slice(0,10);
+  $('f-inv').value  = 'BG-' + String(Date.now()).slice(-5);
+  $('p-year').textContent = new Date().getFullYear();
+
+  // Start with one blank item row (placeholders show what to enter)
+  addItem();
+  recalc();
+  refreshAdminStats();
+}
+init();
+</script>
+</body>
+</html>
